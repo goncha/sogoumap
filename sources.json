@@ -1,0 +1,8 @@
+[
+    {"source": "app/map.js"},
+    {"source": "app/assistants/stage-assistant.js"},
+    {
+        "scenes": "map",
+        "source": "app/assistants/map-assistant.js"
+    }
+]

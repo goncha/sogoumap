@@ -1,0 +1,9 @@
+{
+	"id": "goncha.sogoumap",
+	"version": "1.0.0",
+	"vendor": "goncha",
+	"type": "web",
+	"main": "index.html",
+	"title": "Sogou Map",
+	"icon": "icon.png"
+}
