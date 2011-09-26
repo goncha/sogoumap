@@ -23,7 +23,12 @@ MapAssistant.prototype.setup = function() {
 MapAssistant.prototype.activate = function(event) {
     this.controller.serviceRequest("palm://com.palm.location/", {
                                        method: "getCurrentPosition",
-                                       parameters: {subscribe: true},
+                                       parameters: {
+					   // subscribe: true,
+					   accuracy: 1,
+					   maximumAge: 0,
+					   responseTime: 1
+				       },
                                        onSuccess: this.centerCurrentPosition.bind(this)
                                    });
 };
@@ -39,7 +44,11 @@ MapAssistant.prototype.cleanup = function(event) {
 MapAssistant.prototype.handleCurrentButton = function(event) {
     this.controller.serviceRequest("palm://com.palm.location/", {
                                    method: "getCurrentPosition",
-                                   parameters: {},
+                                   parameters: {
+				       accuracy: 1,
+				       maximumAge: 0,
+				       responseTime: 1
+				   },
                                    onSuccess: this.centerCurrentPosition.bind(this)
                                  });  
 };
@@ -55,14 +64,15 @@ MapAssistant.prototype.createMap = function(position) {
     };
     this.map = new sogou.maps.Map(mapNode, options);
     window.map = this.map;
-    var navIconImg = new sogou.maps.MarkerImage("images/googlemaps.clear.gif",
-						new sogou.maps.Size(12,12),
-						new sogou.maps.Point(654,26),
-						new sogou.maps.Point(6,6),
-					       new sogou.maps.Size(12,12));
+    // var navIconImg = new sogou.maps.MarkerImage("images/googlemaps.clear.gif",
+    // 						new sogou.maps.Size(12,12),
+    // 						new sogou.maps.Point(654,26),
+    // 						new sogou.maps.Point(6,6),
+    // 					       new sogou.maps.Size(12,12));
     this.map.navMarker = new sogou.maps.Marker({disableLabel: true,
 						draggable: false,
-						icon: navIconImg,
+						// icon: navIconImg,
+						icon: "images/heading.png",
 						map: this.map,
 						position: center});
 };
@@ -78,31 +88,33 @@ MapAssistant.prototype.centerCurrentPosition = function(position) {
 	    this.centerCurrentPosition.bind(this).delay(1, position);
 	} else {
 	    if (!this.map.navMarkerImg) {
-		var images = this.map.navMarker.container.childNodes;
-		images[0].childNodes[0].style.background = "url(\"images/googlemaps.png\") no-repeat -654px -26px";
-		images[0].childNodes[0].style.left = "";
-		images[0].childNodes[0].style.top = "";
-		images[0].style.display = "inline-block";
-		images[1].childNodes[0].style.background = "url(\"images/googlemaps.png\") no-repeat -666px -26px";
-		images[1].childNodes[0].style.left = "";
-		images[1].childNodes[0].style.top = "";
-		images[1].childNodes[0].style.opacity = 1.0;
-		images[1].style.display = "none";
-		this.map.navMarkerImg = this.map.navMarker.container.childNodes[0].childNodes[0];
+	    	// var images = this.map.navMarker.container.childNodes;
+	    	// images[0].childNodes[0].style.background = "url(\"images/googlemaps.png\") no-repeat -654px -26px";
+	    	// images[0].childNodes[0].style.left = "";
+	    	// images[0].childNodes[0].style.top = "";
+	    	// images[0].style.display = "inline-block";
+	    	// images[1].childNodes[0].style.background = "url(\"images/googlemaps.png\") no-repeat -666px -26px";
+	    	// images[1].childNodes[0].style.left = "";
+	    	// images[1].childNodes[0].style.top = "";
+	    	// images[1].childNodes[0].style.opacity = 1.0;
+	    	// images[1].style.display = "none";
+	    	
 		
-		this.map.navMarker.flash = function () {
-		    var images = this.container.childNodes;
-		    var fd = images[0].style.display;
-		    images[0].style.display = images[1].style.display;
-		    images[1].style.display = fd;
-		    this.flash.bind(this).delay(1);
-		};
-		this.map.navMarker.flashable = true;
-		this.map.navMarker.flash();
+	    	// this.map.navMarker.flash = function () {
+	    	//     var images = this.container.childNodes;
+	    	//     var fd = images[0].style.display;
+	    	//     images[0].style.display = images[1].style.display;
+	    	//     images[1].style.display = fd;
+	    	//     this.flash.bind(this).delay(1);
+	    	// };
+	    	// this.map.navMarker.flashable = true;
+	    	// this.map.navMarker.flash();
+		
+		this.map.navMarkerImg = this.map.navMarker.container.childNodes[0].childNodes[0];
 	    }
 	    var center = new sogou.maps.LatLng(position.latitude, position.longitude);
 	    this.map.navMarker.setPosition(center);
-	    // this.map.navMarkerImg.style.webkitTransform = "rotate(" + position.heading +"deg)";
+	    this.map.navMarkerImg.style.webkitTransform = "rotate(" + position.heading +"deg)";
 	    this.map.setCenter(center);
 	}
     }
